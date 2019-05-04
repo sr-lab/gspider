@@ -59,10 +59,15 @@ Num (BoundedDouble a b) where
     fromInteger = ?fromInteger_bd -- TODO: Hole.
 
 
+||| Equality for bounded doubles is just the same as equality for doubles.
+|||
+||| @n a bounded double
+||| @m a bounded double
 eq : (n, m : BoundedDouble a b) -> Bool
 eq (MkBoundedDouble u) (MkBoundedDouble v) = u == v
 
 
+||| Implement equality for bounded doubles.
 Eq (BoundedDouble a b) where
     (==) = eq
 
