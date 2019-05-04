@@ -1,0 +1,7 @@
+package gspider
+
+modules = Gspider
+sourcedir = src
+executable = gspider
+main = gspider
+opts = "-p contrib"
