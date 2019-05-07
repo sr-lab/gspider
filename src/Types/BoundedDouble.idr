@@ -4,13 +4,14 @@ module Gspider.Types.BoundedDouble
 import Data.So
 
 
-%access public export
+%access private
 
 
 ||| Double-precision floating-point numbers bounded to fall between a lower and an upper bound.
 |||
 ||| @a the lower bound
 ||| @b the upper bound
+public export
 data BoundedDouble : (a, b : Double) -> Type where
   ||| Constructs a bounded double with the specified value.
   |||
@@ -28,7 +29,6 @@ data BoundedDouble : (a, b : Double) -> Type where
 |||
 ||| @n a bounded double
 ||| @m a bounded double
-private
 plus : (n, m : BoundedDouble a b) -> BoundedDouble a b
 plus (MkBoundedDouble u) (MkBoundedDouble v) =
   let x = u + v in
@@ -42,7 +42,6 @@ plus (MkBoundedDouble u) (MkBoundedDouble v) =
 |||
 ||| @n a bounded double
 ||| @m a bounded double
-private
 mult : (n, m : BoundedDouble a b) -> BoundedDouble a b
 mult (MkBoundedDouble u) (MkBoundedDouble v) =
   let x = u * v in
@@ -55,7 +54,6 @@ mult (MkBoundedDouble u) (MkBoundedDouble v) =
 ||| Conversion from integers to bounded doubles.
 |||
 ||| @x the integer to convert
-private
 fromInteger' : (x : Integer) -> BoundedDouble a b
 fromInteger' u =
   let x = the Double (cast u) in
@@ -67,6 +65,7 @@ fromInteger' u =
 
 
 ||| Implement numeric operations for bounded doubles.
+public export
 Num (BoundedDouble a b) where
     (+) = plus
     (*) = mult
@@ -82,6 +81,7 @@ eq (MkBoundedDouble u) (MkBoundedDouble v) = u == v
 
 
 ||| Implement equality for bounded doubles.
+public export
 Eq (BoundedDouble a b) where
     (==) = eq
 
@@ -90,7 +90,6 @@ Eq (BoundedDouble a b) where
 |||
 ||| @n a bounded double
 ||| @m a bounded double
-private
 sub : (n, m : BoundedDouble a b) -> BoundedDouble a b
 sub (MkBoundedDouble u) (MkBoundedDouble v) =
   let x = u - v in
@@ -103,7 +102,6 @@ sub (MkBoundedDouble u) (MkBoundedDouble v) =
 ||| Negation for bounded doubles that caps the result to be within bounds.
 |||
 ||| @n a bounded double
-private
 negate' : (n : BoundedDouble a b) -> BoundedDouble a b
 negate' (MkBoundedDouble u) =
   let x = u * -1 in
@@ -114,6 +112,7 @@ negate' (MkBoundedDouble u) =
 
 
 ||| Implement negation operations for bounded doubles.
+public export
 Neg (BoundedDouble a b) where
   negate = negate'
   (-) = sub
@@ -123,7 +122,6 @@ Neg (BoundedDouble a b) where
 |||
 ||| @n a bounded double
 ||| @m a bounded double
-private
 div : (n, m : BoundedDouble a b) -> BoundedDouble a b
 div (MkBoundedDouble u) (MkBoundedDouble v) =
   let x = u / v in
@@ -134,6 +132,7 @@ div (MkBoundedDouble u) (MkBoundedDouble v) =
 
 
 ||| Implement fractional operations for bounded doubles.
+public export
 Fractional (BoundedDouble a b) where
   (/) = div
 

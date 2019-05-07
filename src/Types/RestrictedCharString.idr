@@ -4,14 +4,13 @@ module Gspider.Types.RestrictedCharString
 import Data.So
 
 
-%access public export
+%access private
 
 
 ||| Returns true if the given list of characters `str` contains only characters specified in `chars`.
 |||
 ||| @chars the list of permitted characters
 ||| @str the string to check
-private
 madeOf' : (chars : List Char) -> (str : List Char) -> Bool
 madeOf' chars [] = True
 madeOf' chars (x :: xs) = elem x chars && madeOf' chars xs
@@ -29,6 +28,7 @@ madeOf chars str = madeOf' chars (unpack str)
 ||| Strings that are restricted to only a specific set of characters.
 |||
 ||| @allowed the list of characters allowed in the string
+public export
 data RestrictedCharString : (allowed : List Char) -> Type where
   ||| Constructs a restricted character set string with the specified value.
   |||
@@ -78,7 +78,6 @@ convertFromRestricted strs = map unrestrictStr strs
 |||
 ||| @x some restricted character set string
 ||| @y some restricted character set string
-private
 equal : (x : RestrictedCharString s) -> (y : RestrictedCharString s) -> Bool
 equal (MkRestrictedCharString u) (MkRestrictedCharString v) = u == v
 
@@ -87,12 +86,12 @@ equal (MkRestrictedCharString u) (MkRestrictedCharString v) = u == v
 |||
 ||| @x some restricted character set string
 ||| @y some restricted character set string
-private
 notEqual : (x : RestrictedCharString s) -> (y : RestrictedCharString s) -> Bool
 notEqual (MkRestrictedCharString u) (MkRestrictedCharString v) = u /= v
 
 
 ||| Implement equality for restricted character set strings.
+public export
 Eq (RestrictedCharString s) where
   (==) = equal
   (/=) = notEqual
@@ -102,11 +101,11 @@ Eq (RestrictedCharString s) where
 |||
 ||| @x some restricted character set string
 ||| @y some restricted character set string
-private
 compare' : (x : RestrictedCharString s) -> (y : RestrictedCharString s) -> Ordering
 compare' (MkRestrictedCharString u) (MkRestrictedCharString v) = compare u v
 
 
 ||| Implement orderability for restricted character set strings.
+public export
 Ord (RestrictedCharString s) where
   compare x y = compare' x y
