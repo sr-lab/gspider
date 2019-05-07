@@ -40,7 +40,7 @@ remove_non_sys s (x :: xs) =
     Just y => (MkPasswordProbability y (prob x)) :: (remove_non_sys s xs)
 
 
-||| Removes password probabilities that are invalid on a given system and renormalizes valid probabilities accordingly.
+||| Removes password probabilities that are invalid on a given system and redistributes probabilities accordingly.
 |||
 ||| @s the system
 ||| @probs the password probabilities
@@ -48,5 +48,5 @@ export
 enforce_sys : (s : System) -> (probs : List RawPasswordProbability) -> List (PasswordProbability s)
 enforce_sys s probs =
   let valid_only = remove_non_sys s probs
-      surplus_prob = (total_prob probs) - (total_prob valid_only) in
+      surplus_prob = (total_raw_prob probs) - (total_prob valid_only) in
       map (\(MkPasswordProbability f g) => MkPasswordProbability f (g + (g * surplus_prob))) valid_only

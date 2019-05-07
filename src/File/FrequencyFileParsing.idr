@@ -1,7 +1,7 @@
 module Gspider.File.FrequencyFileParsing
 
 
-%access export
+%access private
 
 
 ||| Represents a password frequency.
@@ -20,7 +20,6 @@ record PasswordFrequency where
 ||| Attempts to transform a list of fields to a password frequency.
 |||
 ||| @fields the list of fields to attempt to transform
-private
 parse_fields : (fields : List String) -> Maybe PasswordFrequency
 parse_fields [] = Nothing
 parse_fields (key :: []) = Nothing
@@ -31,7 +30,6 @@ parse_fields (key :: value :: _) = Just (MkPasswordFrequency key (cast value))
 |||
 ||| @delim the delimiter that separates fields in the frequency file
 ||| @row the raw data row to attempt to transform
-private
 parse_row : (delim : Char) -> (row : String) -> Maybe PasswordFrequency
 parse_row delim row = parse_fields (split (== delim) row)
 
@@ -40,5 +38,6 @@ parse_row delim row = parse_fields (split (== delim) row)
 |||
 ||| @delim the delimiter that separates fields in the frequency file
 ||| @rows the raw data rows to transform
+export
 parse_rows : (delim : Char) -> (rows : String) -> List PasswordFrequency
 parse_rows delim rows = catMaybes (map (parse_row delim) (lines rows))
