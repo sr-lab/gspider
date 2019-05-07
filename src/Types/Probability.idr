@@ -40,3 +40,6 @@ tryMkProbability x = tryBound 0 1 x
 export
 toDouble : (p : Probability) -> Double
 toDouble (MkBoundedDouble x) = x
+
+toString : (p : Probability) -> String
+toString (MkBoundedDouble x) = cast x

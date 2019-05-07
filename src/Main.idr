@@ -13,8 +13,8 @@ import Types.RestrictedCharString
 
 
 lookup : (List (PasswordProbability s)) -> RestrictedCharString s -> Probability
-lookup [] x = ?lookup_rhs_1
-lookup ((MkPasswordProbability ord pwd prob) :: xs) x = if pwd == x then prob else lookup xs x
+lookup [] x = imposs
+lookup ((MkPasswordProbability pwd prob) :: xs) x = if pwd == x then prob else lookup xs x
 
 
 loadDist : (s : System) -> (path : String) -> IO (Maybe (Distribution s))
@@ -43,6 +43,29 @@ initFrame [] dist = Empty dist
 initFrame att@(x :: xs) dist = Initial att dist
 
 
+runFrame : (paf : AttackFrame s n m) -> IO ()
+runFrame (Empty d) = putStrLn "Frame is empty."
+runFrame paf@(Initial p d) = do
+  next <- pure (advance paf)
+  putStrLn ("Frame is initial.")
+  case next of
+    Ongoing _ _ _ q => putStrLn (toString q)
+    Terminal _ _ q => putStrLn (toString q)
+  runFrame next
+runFrame paf@(Ongoing p g d q) = do
+  next <- pure (advance paf)
+  case next of
+    Ongoing _ _ _ q => putStrLn (toString q)
+    Terminal _ _ q => putStrLn (toString q)
+  runFrame next
+runFrame (Terminal g d q) = putStrLn "Frame is terminal."
+
+printll : (f : List (RestrictedCharString s)) -> IO ()
+printll [] = putStrLn "nah"
+printll (x :: xs) = do
+  putStrLn (unrestrict x)
+  printll xs
+
 main : IO ()
 main = do
   [arg_prog, arg_sys, arg_dist, arg_att] <- getArgs -- TODO: Bind alternatives!
@@ -50,5 +73,6 @@ main = do
   Just dist <- loadDist sys arg_dist  | Nothing => putStrLn "Error: Could not load distribution."
   Just att <- loadAtt sys arg_att | Nothing => putStrLn "Error: Could not load attack."
   let frame = initFrame (fromList att) dist
-  putStrLn "Hello world!"
+  -- printll att
+  runFrame frame
 -- TOOD: Run PAF to completion.

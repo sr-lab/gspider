@@ -42,7 +42,7 @@ distinctProb : (p : (RestrictedCharString s)) ->
                (d : Distribution s) ->
                (g : Vect n (RestrictedCharString s)) ->
                Probability
-distinctProb p d g = if elem p g then 0 else d p
+distinctProb p d g = if elem p g then imposs else d p
 
 
 ||| Advances an attack to the next frame.

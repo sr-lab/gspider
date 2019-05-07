@@ -52,11 +52,20 @@ mult (MkBoundedDouble u) (MkBoundedDouble v) =
     (_, Right _) => MkBoundedDouble b
 
 
+private
+fromInteger' : (x : Integer) -> BoundedDouble a b
+fromInteger' u =
+  let x = the Double (cast u) in
+    case (choose (a <= x), choose (x <= b), choose (a <= b), choose (a <= a), choose (b <= b)) of
+    (Left _, Left _, Left _, Left _, Left _) => MkBoundedDouble x
+    _ => ?todo_1
+
+
 ||| Implement numeric operations for bounded doubles.
 Num (BoundedDouble a b) where
     (+) = plus
     (*) = mult
-    fromInteger = ?fromInteger_bd -- TODO: Hole.
+    fromInteger = fromInteger'  -- TODO: Hole.
 
 
 ||| Equality for bounded doubles is just the same as equality for doubles.

@@ -80,3 +80,7 @@ notEqual (MkRestrictedCharString u) (MkRestrictedCharString v) = u /= v
 Eq (RestrictedCharString s) where
   (==) = equal
   (/=) = notEqual
+
+export
+unrestrict : (x : RestrictedCharString s) -> String
+unrestrict (MkRestrictedCharString x) = x

@@ -15,8 +15,7 @@ import File.ProbabilityConversion
 |||
 public export
 data PasswordProbability : (s : System) -> Type where
-  MkPasswordProbability : (ord : Int) ->
-                          (pwd : RestrictedCharString s) ->
+  MkPasswordProbability : (pwd : RestrictedCharString s) ->
                           (prob : Probability) ->
                           PasswordProbability s
 
@@ -25,7 +24,7 @@ data PasswordProbability : (s : System) -> Type where
 |||
 ||| @probs the records to total
 total_prob : (probs : List (PasswordProbability s)) -> Probability
-total_prob probs = sum (map (\(MkPasswordProbability _ _ prob) => prob) probs)
+total_prob probs = sum (map (\(MkPasswordProbability _ prob) => prob) probs)
 
 
 ||| Removes password probabilities that are invalid on a given system.
@@ -38,7 +37,7 @@ remove_non_sys s [] = []
 remove_non_sys s (x :: xs) =
   case restrictStr s (pwd x) of
     Nothing => remove_non_sys s xs
-    Just y => (MkPasswordProbability (ord x) y (prob x)) :: (remove_non_sys s xs)
+    Just y => (MkPasswordProbability y (prob x)) :: (remove_non_sys s xs)
 
 
 ||| Removes password probabilities that are invalid on a given system and renormalizes valid probabilities accordingly.
@@ -50,4 +49,4 @@ enforce_sys : (s : System) -> (probs : List RawPasswordProbability) -> List (Pas
 enforce_sys s probs =
   let valid_only = remove_non_sys s probs
       surplus_prob = (total_prob probs) - (total_prob valid_only) in
-      map (\(MkPasswordProbability d f g) => MkPasswordProbability d f (g + (g * surplus_prob))) valid_only
+      map (\(MkPasswordProbability f g) => MkPasswordProbability f (g + (g * surplus_prob))) valid_only

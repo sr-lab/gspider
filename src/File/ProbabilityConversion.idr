@@ -18,7 +18,6 @@ record RawPasswordProbability where
   ||| @pwd the password
   ||| @prob the probability
   constructor MkRawPasswordProbability
-  ord: Int
   pwd : String
   prob : Probability
 
@@ -39,7 +38,7 @@ to_prob : (m : Double) -> (f : PasswordFrequency) -> Maybe RawPasswordProbabilit
 to_prob m f =
   case tryMkProbability ((cast (freq f)) / m) of
     Nothing => Nothing
-    Just p =>  Just (MkRawPasswordProbability (ord f) (pwd f) p)
+    Just p =>  Just (MkRawPasswordProbability (pwd f) p)
 
 
 ||| Totals up the frequencies of every password in a list of password frequencies.
