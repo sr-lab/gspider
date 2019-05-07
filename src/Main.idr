@@ -29,3 +29,6 @@ loadDist s path = do
 
 main : IO ()
 main = putStrLn "Hello world!"
+-- TODO: Load attack, sys and dist from args.
+-- TODO: Put everything into PAF.
+-- TOOD: Run PAF to completion.
