@@ -1,5 +1,6 @@
 module Gspider.Main
 
+
 import Data.Vect
 import Data.SortedMap
 
@@ -86,7 +87,7 @@ initFrame att@(_ :: _) dist = Initial att dist
 ||| Runs a probabilistic attack frame to completion, printing each probability.
 |||
 ||| @paf    the probabilistic attack frame
-runFrame : (paf : AttackFrame s n m) -> IO ()
+runFrame : (paf : AttackFrame _ _ _) -> IO ()
 runFrame (Empty _) = putStrLn "Frame is empty."
 runFrame paf@(Initial _ _) = do
   next <- pure (advance paf)
@@ -106,7 +107,7 @@ runFrame (Terminal _ _ _) = putStrLn "Frame is terminal."
 
 main : IO ()
 main = do
-  [arg_prog, arg_sys, arg_dist, arg_att] <- getArgs -- TODO: Bind alternatives!
+  [_, arg_sys, arg_dist, arg_att] <- getArgs -- TODO: Bind alternatives!
   Just s <- loadSystem arg_sys | Nothing => putStrLn "Error: Could not load system."
   Just dist <- loadDist s arg_dist | Nothing => putStrLn "Error: Could not load distribution."
   Just att <- loadAtt s arg_att | Nothing => putStrLn "Error: Could not load attack."

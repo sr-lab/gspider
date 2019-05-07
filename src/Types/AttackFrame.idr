@@ -2,6 +2,7 @@ module Gspider.Types.AttackFrame
 
 
 import Data.Vect
+
 import Core
 import Types.Probability
 import Types.RestrictedCharString
