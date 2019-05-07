@@ -1,6 +1,7 @@
 module Gspider.Main
 
 import Data.Vect
+import Data.SortedMap
 
 import Core
 import File.FrequencyFileParsing
@@ -18,11 +19,29 @@ import Types.RestrictedCharString
 ||| @pwd    the password to look up
 lookup : (probs : List (PasswordProbability s)) -> (pwd : RestrictedCharString s) -> Probability
 lookup [] _ = imposs
-lookup ((MkPasswordProbability pwd' prob) :: probs') pwd = 
-  if pwd == pwd' then 
-    prob 
-  else 
+lookup ((MkPasswordProbability pwd' prob) :: probs') pwd =
+  if pwd == pwd' then
+    prob
+  else
     lookup probs' pwd
+
+
+||| Looks up a password probability in a sorted map.
+|||
+||| @probs  the list of password probabilities
+||| @pwd    the password to look up
+lookupEff : (probs : SortedMap (RestrictedCharString s) Probability) -> (pwd : RestrictedCharString s) -> Probability
+lookupEff probs pwd =
+  case lookup pwd probs of
+    Just prob => prob
+    _ => imposs
+
+
+||| Converts a list of password probabilities into a list of tuples.
+|||
+||| @probs  the list of password probabilities
+toTuples : (probs : List (PasswordProbability s)) -> List (RestrictedCharString s, Probability)
+toTuples probs = map (\(MkPasswordProbability pwd prob) => (pwd, prob)) probs
 
 
 ||| Loads a password probability distribution.
@@ -37,8 +56,9 @@ loadDist s path = do
       let rows = parse_rows ':' txt'
           raw_probs = to_probs rows
           probs = enforce_sys s raw_probs
+          tuples = toTuples probs
       in
-      pure (Just (lookup probs))
+      pure (Just (lookupEff (fromList tuples)))
     _ => pure Nothing
 
 

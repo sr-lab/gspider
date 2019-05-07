@@ -58,6 +58,22 @@ convertToRestricted : (chars : List Char) -> (strs : List String) -> List (Restr
 convertToRestricted chars strs = catMaybes (map (restrictStr chars) strs)
 
 
+||| Converts a string restricted to containing only a specific set of characters to an unrestricted string.
+|||
+||| @str the string to unrestrict
+export
+unrestrictStr : (str : RestrictedCharString _) -> String
+unrestrictStr (MkRestrictedCharString str) = str
+
+
+||| Converts a list of strings containing only a specific set of characters to a list of unrestricted strings.
+|||
+||| @strs the list of strings to convert
+export
+convertFromRestricted : (strs : List (RestrictedCharString _)) -> List String
+convertFromRestricted strs = map unrestrictStr strs
+
+
 ||| Equality for restricted character set strings.
 |||
 ||| @x some restricted character set string
@@ -81,6 +97,16 @@ Eq (RestrictedCharString s) where
   (==) = equal
   (/=) = notEqual
 
-export
-unrestrict : (x : RestrictedCharString s) -> String
-unrestrict (MkRestrictedCharString x) = x
+
+||| Comparison for restricted character set strings.
+|||
+||| @x some restricted character set string
+||| @y some restricted character set string
+private
+compare' : (x : RestrictedCharString s) -> (y : RestrictedCharString s) -> Ordering
+compare' (MkRestrictedCharString u) (MkRestrictedCharString v) = compare u v
+
+
+||| Implement orderability for restricted character set strings.
+Ord (RestrictedCharString s) where
+  compare x y = compare' x y

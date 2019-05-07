@@ -5,7 +5,7 @@ import Data.So
 import public Types.BoundedDouble -- This needs re-exporting.
 
 
-%access public export
+%access private
 
 
 ||| Represents a probability.
@@ -41,5 +41,10 @@ export
 toDouble : (p : Probability) -> Double
 toDouble (MkBoundedDouble x) = x
 
+
+||| Converts from a probability to a string.
+|||
+||| @p the probability to convert
+export
 toString : (p : Probability) -> String
 toString (MkBoundedDouble x) = cast x

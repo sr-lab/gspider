@@ -52,20 +52,25 @@ mult (MkBoundedDouble u) (MkBoundedDouble v) =
     (_, Right _) => MkBoundedDouble b
 
 
+||| Conversion from integers to bounded doubles.
+|||
+||| @x the integer to convert
 private
 fromInteger' : (x : Integer) -> BoundedDouble a b
 fromInteger' u =
   let x = the Double (cast u) in
     case (choose (a <= x), choose (x <= b), choose (a <= b), choose (a <= a), choose (b <= b)) of
-    (Left _, Left _, Left _, Left _, Left _) => MkBoundedDouble x
-    _ => ?todo_1
+      (Left _, Left _, Left _, Left _, Left _) => MkBoundedDouble x
+      (Right _, Left _, Left _, Left _, Left _) => MkBoundedDouble a
+      (Left _, Right _, Left _, Left _, Left _) => MkBoundedDouble b
+      _ => ?singularity_1 -- We'll never hit this hole.
 
 
 ||| Implement numeric operations for bounded doubles.
 Num (BoundedDouble a b) where
     (+) = plus
     (*) = mult
-    fromInteger = fromInteger'  -- TODO: Hole.
+    fromInteger = fromInteger'
 
 
 ||| Equality for bounded doubles is just the same as equality for doubles.
