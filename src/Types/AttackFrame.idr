@@ -2,25 +2,12 @@ module Gspider.Types.AttackFrame
 
 
 import Data.Vect
+import Core
 import Types.Probability
 import Types.RestrictedCharString
 
 
 %access private
-
-
-||| Represents a system as a list of supported password characters.
-public export
-System : Type -- System is a type alias for a character list.
-System = List Char
-
-
-||| Gets the type of a password probability distribution for a system.
-|||
-||| @ s the system
-public export
-Distribution : (s : System) -> Type
-Distribution s = (RestrictedCharString s) -> Probability
 
 
 ||| Represents a probabilistic attack frame.
