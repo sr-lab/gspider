@@ -26,16 +26,16 @@ record RawPasswordProbability where
 |||
 ||| @probs the records to total
 export
-total_raw_prob : (probs : List RawPasswordProbability) -> Probability
-total_raw_prob probs = sum (map prob probs)
+totalRawProb : (probs : List RawPasswordProbability) -> Probability
+totalRawProb probs = sum (map prob probs)
 
 
 ||| Attempts to convert a password frequency to a raw password probability.
 |||
 ||| @m the magnitude of the entire dataset
 ||| @f the frequency to attempt to convert
-to_prob : (m : Double) -> (f : PasswordFrequency) -> Maybe RawPasswordProbability
-to_prob m f =
+toProb : (m : Double) -> (f : PasswordFrequency) -> Maybe RawPasswordProbability
+toProb m f =
   case tryMkProbability ((cast (freq f)) / m) of
     Nothing => Nothing
     Just p =>  Just (MkRawPasswordProbability (pwd f) p)
@@ -44,13 +44,13 @@ to_prob m f =
 ||| Totals up the frequencies of every password in a list of password frequencies.
 |||
 ||| @rows the data rows to total
-total_freq : (rows : List PasswordFrequency) -> Int
-total_freq rows = sum (map freq rows)
+totalFreq : (rows : List PasswordFrequency) -> Int
+totalFreq rows = sum (map freq rows)
 
 
 ||| Converts a list of password frequencies to password probabilities.
 |||
 ||| @freqs the data rows to total
 export
-to_probs : (freqs : List PasswordFrequency) -> List RawPasswordProbability
-to_probs freqs = catMaybes (map (to_prob (cast (total_freq freqs))) freqs)
+toProbs : (freqs : List PasswordFrequency) -> List RawPasswordProbability
+toProbs freqs = catMaybes (map (toProb (cast (totalFreq freqs))) freqs)

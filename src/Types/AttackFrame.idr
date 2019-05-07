@@ -39,11 +39,11 @@ data AttackFrame : (s : System) -> (n : Nat) -> (m : Nat) -> Type where
 ||| @ p the password
 ||| @ d the distribution
 ||| @ g the collection
-distinct_prob : (p : (RestrictedCharString s)) ->
+distinctProb : (p : (RestrictedCharString s)) ->
                (d : Distribution s) ->
                (g : Vect n (RestrictedCharString s)) ->
                Probability
-distinct_prob p d g = if elem p g then imposs else d p
+distinctProb p d g = if elem p g then imposs else d p
 
 
 ||| Advances an attack to the next frame.
@@ -53,8 +53,8 @@ export
 advance : (frame : AttackFrame s (S n) m) -> AttackFrame s n (S m)
 advance (Initial [p] d) = Terminal [p] d (d p)
 advance (Initial (p :: rest@(p' :: ps)) d) = Ongoing rest [p] d (d p)
-advance (Ongoing [p] g d q) = Terminal (p :: g) d (q + (distinct_prob p d g))
-advance (Ongoing (p :: rest@(p' :: ps)) g d q) = Ongoing rest (p :: g) d (q + (distinct_prob p d g))
+advance (Ongoing [p] g d q) = Terminal (p :: g) d (q + (distinctProb p d g))
+advance (Ongoing (p :: rest@(p' :: ps)) g d q) = Ongoing rest (p :: g) d (q + (distinctProb p d g))
 
 
 ||| Retreats an attack to the previous frame.
@@ -63,6 +63,6 @@ advance (Ongoing (p :: rest@(p' :: ps)) g d q) = Ongoing rest (p :: g) d (q + (d
 export
 retreat : (frame : AttackFrame s n (S m)) -> AttackFrame s (S n) m
 retreat (Ongoing p [g] d q) = Initial (g :: p) d
-retreat (Ongoing p (g :: rest@(g' :: gs)) d q) = Ongoing (g :: p) rest d (q - (distinct_prob g d rest))
+retreat (Ongoing p (g :: rest@(g' :: gs)) d q) = Ongoing (g :: p) rest d (q - (distinctProb g d rest))
 retreat (Terminal [g] d q) = Initial [g] d
-retreat (Terminal (g :: rest@(g' :: gs)) d q) = Ongoing [g] rest d (q - (distinct_prob g d rest))
+retreat (Terminal (g :: rest@(g' :: gs)) d q) = Ongoing [g] rest d (q - (distinctProb g d rest))

@@ -54,9 +54,9 @@ loadDist s path = do
   txt <- readFile path
   case txt of
     (Right txt') =>
-      let rows = parse_rows ':' txt'
-          raw_probs = to_probs rows
-          probs = enforce_sys s raw_probs
+      let rows = parseRows ':' txt'
+          raw_probs = toProbs rows
+          probs = enforceSys s raw_probs
           tuples = toTuples probs
       in
       pure (Just (lookupEff (fromList tuples)))
