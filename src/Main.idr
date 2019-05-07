@@ -12,11 +12,19 @@ import Types.AttackFrame
 import Types.RestrictedCharString
 
 
-lookup : (List (PasswordProbability s)) -> RestrictedCharString s -> Probability
+||| Looks up a password probability in a list.
+|||
+||| @probs the list of password probabilities
+||| @x the password to look up
+lookup : (probs : List (PasswordProbability s)) -> (x : RestrictedCharString s) -> Probability
 lookup [] x = imposs
 lookup ((MkPasswordProbability pwd prob) :: xs) x = if pwd == x then prob else lookup xs x
 
 
+||| Loads a distribution.
+|||
+||| @s the system
+||| @path the path to the file
 loadDist : (s : System) -> (path : String) -> IO (Maybe (Distribution s))
 loadDist s path = do
   txt <- readFile path
@@ -30,6 +38,10 @@ loadDist s path = do
     _ => pure Nothing
 
 
+||| Loads an attack.
+|||
+||| @s the system
+||| @path the path to the file
 loadAtt : (s : System) -> (path : String) -> IO (Maybe (List (RestrictedCharString s)))
 loadAtt s path = do
   txt <- readFile path
@@ -38,11 +50,18 @@ loadAtt s path = do
     _ => pure Nothing
 
 
+||| Initialises a probabilistic attack frame.
+|||
+||| @att the attack
+||| @dist the distribution
 initFrame : (att : Vect n (RestrictedCharString s)) -> (dist : Distribution s) -> AttackFrame s n 0
 initFrame [] dist = Empty dist
 initFrame att@(x :: xs) dist = Initial att dist
 
 
+||| Runs a probabilistic attack frame to completion, printing each probability.
+|||
+||| @paf    the probabilistic attack frame
 runFrame : (paf : AttackFrame s n m) -> IO ()
 runFrame (Empty d) = putStrLn "Frame is empty."
 runFrame paf@(Initial p d) = do
@@ -60,11 +79,6 @@ runFrame paf@(Ongoing p g d q) = do
   runFrame next
 runFrame (Terminal g d q) = putStrLn "Frame is terminal."
 
-printll : (f : List (RestrictedCharString s)) -> IO ()
-printll [] = putStrLn "nah"
-printll (x :: xs) = do
-  putStrLn (unrestrict x)
-  printll xs
 
 main : IO ()
 main = do
@@ -72,7 +86,5 @@ main = do
   Just sys <- loadSystem arg_sys | Nothing => putStrLn "Error: Could not load system."
   Just dist <- loadDist sys arg_dist  | Nothing => putStrLn "Error: Could not load distribution."
   Just att <- loadAtt sys arg_att | Nothing => putStrLn "Error: Could not load attack."
-  let frame = initFrame (fromList att) dist
-  -- printll att
-  runFrame frame
--- TOOD: Run PAF to completion.
+  let frame = initFrame (fromList att) dist -- Initialise probabilistic attack frame.
+  runFrame frame -- Run PAF to completion.

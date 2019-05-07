@@ -11,9 +11,9 @@ System : Type -- System is a type alias for a character list.
 System = List Char
 
 
-||| Gets the type of a password probability distribution for a system.
+||| Represents a password probability distribution for a system.
 |||
-||| @ s the system
+||| @s the system
 public export
 Distribution : (s : System) -> Type
 Distribution s = (RestrictedCharString s) -> Probability
