@@ -3,33 +3,57 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>GSPIDER - Guessing Success Probability Slider</title>
+    <title>GSPIDER - Guessing success probability slider</title>
     <meta name="description" content="Utility for plotting password guessing attack success probability over time.">
     <meta name="author" content="Saul Johnson">
     <meta name="viewport" content="width=device-width">
+    <!-- Full jQuery is required -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <!-- Boostrap 4 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.0/dist/showdown.min.js"></script>
-    <link rel="stylesheet" href="https://bootswatch.com/4/united/bootstrap.min.css">
+    <!-- Bootswatch 4 -->
+    <!--
+        You can change this skin if you like to any from: https://www.bootstrapcdn.com/bootswatch/
+        Generate SRI hashes using this: https://www.srihash.org/
+      -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/united/bootstrap.min.css" integrity="sha384-WTtvlZJeRyCiKUtbQ88X1x9uHmKi0eHCbQ8irbzqSLkE0DpAZuixT5yFvgX0CjIu" crossorigin="anonymous">
+    <!-- Showdown markdown renderer -->
+    <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.0/dist/showdown.min.js" integrity="sha384-KpuxVjTC2hfOkg5KV3jSdx1eA6xy0PGS0wNfDrwf4sZBnZdzlIsnkH+LzLkavmH7" crossorigin="anonymous"></script>
+    <!-- Page-specific script -->
     <script>
-        // Load markdown from the readme, render it and display.
+        // Configure the page here.
+        const username = "sr-lab";
+        const repo = "gspider";
+
+        // Pre-calculate some URLs.
+        const userPage = `https://github.com/${username}`;
+        const projectPage = `${userPage}/${repo}`;
+
+        // This runs on page load.
         $(document).ready(function() {
+            // Update links etc.
+            $(".jsProjPage").attr("href", projectPage);
+            $(".jsUsername").attr("href", userPage);
+            $(".jsUsername").html(username);
+
+            // Load markdown from the readme, render it and display.
             $.ajax({
-                url: "https://raw.githubusercontent.com/sr-lab/gspider/master/README.md", // Change this URL if needed.
+                url: `https://raw.githubusercontent.com/${username}/${repo}/master/README.md`,
                 success: function(result) {
                     var converter = new showdown.Converter();
                     var logoRemoved = result.replace(/!\[logo\]\(.+?\)/gi, ""); // Remove logo.
-                    document.getElementById("content").innerHTML = converter.makeHtml(logoRemoved);
+                    $("#content").html(converter.makeHtml(logoRemoved));
                 },
                 error: function() {
-                    document.getElementById("content").innerHTML = "<p class=\"loadErr\">Error loading page, visit it on <a href=\"https://github.com/sr-lab/gspider\">GitHub</a> instead.</p>";
+                    // Show error message.
+                    $("#content").html(`<p class="loadErr">Error loading page, visit it on <a href="${projectPage}">GitHub</a> instead.</p>`);
                 }
             });
         });
     </script>
+    <!-- Page-specific styles -->
     <style>
         body {
             margin: 36px;
@@ -55,7 +79,9 @@
             </div>
         </div>
         <div class="row">
+            <!-- Rendered markdown is loaded in the following element -->
             <div class="col-md-12" id="content">
+                <!-- Loader is shown initially -->
                 <div class="loader">
                     <p>
                         Loading page content...
@@ -71,7 +97,7 @@
         </div>
         <div class="row">
             <div class="col-md-12 text-center text-muted">
-                <small>Copyright &copy; Saul Johnson (<a href="https://github.com/lambdacasserole">lambdacasserole</a>) | <a href="https://github.com/sr-lab/gspider">GitHub</a> | MIT Licensed</small>
+                <small>Copyright &copy; <a class="jsUsername"></a> | <a class="jsProjPage">GitHub</a></small> | Powered by <a target="_blank" href="https://lambdacasserole.github.io/rollout/">Rollout</a>
             </div>
         </div>
     </div>
