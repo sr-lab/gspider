@@ -41,6 +41,7 @@ Probability = BoundedDouble 0 1
 ```
 
 ### Restricted Character-Set String
+At the core of the probabilistic attack frame type is the restricted character-set string, which is a string type restricted to containing some specific set of characters. It's encoded as below.
 
 ```idris
 ||| Returns true if the given list of characters `str` contains only characters specified in `chars`.
@@ -75,7 +76,7 @@ data RestrictedCharString : (allowed : List Char) -> Type where
 ```
 
 ### Probabilistic Attack Frames
-Probabilistic attack frames are a new datatype, used by GSPIDER, to model guessing attack evolution in a type-safe way.
+Probabilistic attack frames are a new datatype, used by GSPIDER, to model guessing attack evolution in a type-safe way. They make use of restricted character-set strings to ensure that both the password distribution and guessing attack relate to passwords containing the same specific subset of characters. It wouldn't make sense, for example, to attempt to input the password `hunter2` on an ATM, which only supports numeric passwords. This is one of the problems that dependently-typed PAFs address (see below).
 
 ```idris
 ||| Represents a probabilistic attack frame.
