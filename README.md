@@ -10,6 +10,7 @@ GSPIDER (**g**uess **s**uccess **p**robability sl**ider**) is a utility, written
 Dependent types are employed for type-safe reasoning across systems in the GSPIDER model:
 
 ### Bounded Double/Probability
+The `BoundedDouble` type represents a `Double` but bounded to lie between a lower and an upper bound. Because operations on `Double` are defined as primitive functions, however, this is non-trivial. The `BoundedDouble` type is defined like this:
 
 ```idris
 ||| Double-precision floating-point numbers bounded to fall between a lower and an upper bound.
@@ -28,6 +29,15 @@ data BoundedDouble : (a, b : Double) -> Type where
                     {auto high : So (a <= x)} ->
                     {auto low : So (x <= b)} ->
                     BoundedDouble a b
+```
+
+From here, specifying a `Probability` type is quite straightforward:
+
+```idris
+||| Represents a probability.
+public export
+Probability : Type
+Probability = BoundedDouble 0 1
 ```
 
 ### Restricted Character-Set String
