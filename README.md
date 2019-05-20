@@ -6,6 +6,41 @@ Guess success probability slider, for plotting the evolution of password guessin
 ## Overview
 GSPIDER (**g**uess **s**uccess **p**robability sl**ider**) is a utility, written in the dependently-typed programming language [Idris](https://www.idris-lang.org/) that plots the evolution of a password guessing attack against a password dataset. At the moment, it's a proof-of-concept, but it's still usable for small-scale models.
 
+## Building
+You'll need [Idris](https://www.idris-lang.org/download/) installed to build the project. From the root of the repo:
+
+```bash
+cd ./src
+idris Main.idr -p contrib -o gspider.exe
+```
+
+## Usage
+From the root of the repo, run the following:
+
+```bash
+./src/gspider.exe ./systems/ascii.sys ./dists/faithwriters.freqs ./attacks/top10k.att > ./results.log
+```
+
+This will leave you with a file called `results.log` in the repo root that looks something like this:
+
+```
+Frame is initial.
+0.005458852610979503
+0.007003810897105778
+0.007621794211556288
+0.007827788649706457
+0.008342774745081882
+0.008342774745081882
+...
+0.2126892573900505
+0.2126892573900505
+0.2126892573900505
+0.2126892573900505
+0.2126892573900505
+0.2126892573900505
+Frame is terminal.
+```
+
 ## Dependent Types
 Dependent types are employed for type-safe reasoning across systems in the GSPIDER model:
 
