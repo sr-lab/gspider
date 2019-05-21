@@ -15,13 +15,27 @@ idris Main.idr -p contrib -o gspider.exe
 ```
 
 ## Usage
-From the root of the repo, run the following:
+Call the program like this, from the root of the repo:
+
+```bash
+./src/gspider.exe ./systems/<system>.sys ./dists/<distribution>.freqs ./attacks/<attack>.att > ./results.log
+```
+
+Here's an overview of what those options mean:
+
+| Position | Name         | Description                                                                                                                                                                 |
+|----------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1        | System       | This specifies the supported character set of the system you're modelling. Two sample system files come with the software, which you can find in `/systems`.                |
+| 2        | Distribution | This specifies the distribution of passwords on the system you're modelling. Four sample distribution files come with the software, which you can find in `/distributions`. |
+| 3        | Attack       | This specifies the password guessing attack you're modelling. A sample attack comes with this software, which you can find in `/attacks`.                                   |
+
+As a quick example, from the root of the repo, run the following:
 
 ```bash
 ./src/gspider.exe ./systems/ascii.sys ./dists/faithwriters.freqs ./attacks/top10k.att > ./results.log
 ```
 
-This will leave you with a file called `results.log` in the repo root that looks something like this:
+This will leave you with a file called `results.log` in the repo root, that will contain the guess success probability of the attack after each guess (or at every *frame*). The file will look something like this:
 
 ```
 Frame is initial.
@@ -141,3 +155,8 @@ data AttackFrame : (s : System) -> (n : Nat) -> (m : Nat) -> Type where
 GSPIDER is still very much in the proof-of-concept stage. With this in mind, there are a few limitations:
 
 * Frequency file/attack size are limited to a few thousand entries each. I this this might be stack space related, but more digging is required.
+
+## Acknowledgements
+I would like to thank the following people for making this project possible:
+
+* [Daniel Miessler](https://github.com/danielmiessler) and all the contributors and maintainers of [SecLists](https://github.com/danielmiessler/SecLists) which contains password datasets used to create the example distribution files in this repository.
