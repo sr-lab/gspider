@@ -47,7 +47,8 @@
                 success: function(result) {
                     var converter = new showdown.Converter();
                     var logoRemoved = result.replace(/!\[logo\]\(.+?\)/gi, ""); // Remove logo.
-                    $("#content").html(converter.makeHtml(logoRemoved));
+                    var urlsChanged = logoRemoved.replace(/!\[docs/(.+?)\]\((.+?)\)/gi, "![$1]($2)"); // Trim URLs.
+                    $("#content").html(converter.makeHtml(urlsChanged));
                 },
                 error: function() {
                     // Show error message.
