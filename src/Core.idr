@@ -2,7 +2,6 @@ module Gspider.Core
 
 
 import Types.RestrictedCharString
-import Types.Probability
 
 
 %access private
@@ -19,4 +18,4 @@ System = List Char
 ||| @s the system
 public export
 Distribution : (s : System) -> Type
-Distribution s = (RestrictedCharString s) -> Probability
+Distribution s = (RestrictedCharString s) -> Double

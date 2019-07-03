@@ -6,46 +6,27 @@ import Data.SortedMap
 
 import Core
 import File.FrequencyFileParsing
-import File.ProbabilityConversion
-import File.DistributionCalculation
 import File.SystemLoading
-import Types.Probability
 import Types.AttackFrame
 import Types.RestrictedCharString
 
 import Probability.Core
-
-||| Looks up a password probability in a list.
-|||
-||| @probs  the list of password probabilities
-||| @pwd    the password to look up
-lookup : (probs : List (PasswordProbability s)) -> (pwd : RestrictedCharString s) -> Probability
-lookup [] _ = imposs
-lookup ((MkPasswordProbability pwd' prob) :: probs') pwd =
-  if pwd == pwd' then
-    prob
-  else
-    lookup probs' pwd
 
 
 ||| Looks up a password probability in a sorted map.
 |||
 ||| @probs  the list of password probabilities
 ||| @pwd    the password to look up
-lookupEff : (probs : SortedMap (RestrictedCharString s) Probability) -> (pwd : RestrictedCharString s) -> Probability
+lookupEff : (probs : SortedMap (RestrictedCharString s) Double) -> (pwd : RestrictedCharString s) -> Double
 lookupEff probs pwd =
   case lookup pwd probs of
     Just prob => prob
-    _ => imposs
+    _ => 0
 
 
-||| Converts a list of password probabilities into a list of tuples.
+||| Unzips a list of password frequency records into two lists.
 |||
-||| @probs  the list of password probabilities
-toTuples : (probs : List (PasswordProbability s)) -> List (RestrictedCharString s, Probability)
-toTuples probs = map (\(MkPasswordProbability pwd prob) => (pwd, prob)) probs
-
-
+||| @freqs  the list of password frequencies
 splitFreqRecords : (freqs : List PasswordFrequency) -> (List String, List Int)
 splitFreqRecords [] = ([], [])
 splitFreqRecords (x :: xs) =
@@ -53,9 +34,13 @@ splitFreqRecords (x :: xs) =
   ((pwd x) :: ps, (freq x) :: fs)
 
 
-toPfpLists : (s : System) -> (freqs : List PasswordFrequency) -> Prob (RestrictedCharString s)
-toPfpLists s [] = flat []
-toPfpLists s freqs =
+||| Converts a system and a list of password frequency records to a distribution.
+|||
+||| @s      the system to convert under
+||| @freqs  the frequencies to use to build the distribution
+toDist : (s : System) -> (freqs : List PasswordFrequency) -> Prob (RestrictedCharString s)
+toDist s [] = flat []
+toDist s freqs =
   let (ps, fs) = splitFreqRecords freqs in
   shape (convertToRestricted s ps) (map cast fs)
 
@@ -70,9 +55,8 @@ loadDist s path = do
   case txt of
     (Right txt') =>
       let rows = parseRows ':' txt'
-          raw_probs = toProbs rows
-          probs = enforceSys s raw_probs
-          tuples = toTuples probs
+          dist = toDist s rows
+          tuples = runProb dist
       in
       pure (Just (lookupEff (fromList tuples)))
     _ => pure Nothing
@@ -108,14 +92,14 @@ runFrame paf@(Initial _ _) = do
   next <- pure (advance paf)
   putStrLn ("Frame is initial.")
   case next of
-    Ongoing _ _ _ q => putStrLn (toString q)
-    Terminal _ _ q => putStrLn (toString q)
+    Ongoing _ _ _ q => putStrLn (cast q)
+    Terminal _ _ q => putStrLn (cast q)
   runFrame next
 runFrame paf@(Ongoing _ _ _ _) = do
   next <- pure (advance paf)
   case next of
-    Ongoing _ _ _ q => putStrLn (toString q)
-    Terminal _ _ q => putStrLn (toString q)
+    Ongoing _ _ _ q => putStrLn (cast q)
+    Terminal _ _ q => putStrLn (cast q)
   runFrame next
 runFrame (Terminal _ _ _) = putStrLn "Frame is terminal."
 
