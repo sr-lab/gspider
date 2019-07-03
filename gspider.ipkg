@@ -4,4 +4,5 @@ modules = Gspider
 sourcedir = src
 executable = gspider
 main = gspider
+pkgs = probability
 opts = "-p contrib"
