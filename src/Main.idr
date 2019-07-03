@@ -13,6 +13,7 @@ import Types.Probability
 import Types.AttackFrame
 import Types.RestrictedCharString
 
+import Probability.Core
 
 ||| Looks up a password probability in a list.
 |||
@@ -43,6 +44,20 @@ lookupEff probs pwd =
 ||| @probs  the list of password probabilities
 toTuples : (probs : List (PasswordProbability s)) -> List (RestrictedCharString s, Probability)
 toTuples probs = map (\(MkPasswordProbability pwd prob) => (pwd, prob)) probs
+
+
+splitFreqRecords : (freqs : List PasswordFrequency) -> (List String, List Int)
+splitFreqRecords [] = ([], [])
+splitFreqRecords (x :: xs) =
+  let (ps, fs) = splitFreqRecords xs in
+  ((pwd x) :: ps, (freq x) :: fs)
+
+
+toPfpLists : (s : System) -> (freqs : List PasswordFrequency) -> Prob (RestrictedCharString s)
+toPfpLists s [] = flat []
+toPfpLists s freqs =
+  let (ps, fs) = splitFreqRecords freqs in
+  shape (convertToRestricted s ps) (map cast fs)
 
 
 ||| Loads a password probability distribution.
