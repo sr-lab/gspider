@@ -109,6 +109,8 @@ Distribution : (s : System) -> Type
 Distribution s = (RestrictedCharString s) -> Double
 ```
 
+Probability distributions themselves are calculated from real-world password frequency distributions using the [Idris probability package](https://github.com/fieldstrength/probability) which draws heavily on the work of Erwig and Kollmansberger in [_Probabilisitic Functional Programming in Haskell_](https://web.engr.oregonstate.edu/~erwig/pfp/).
+
 ### Probabilistic Attack Frames
 Probabilistic attack frames are a new datatype, used by GSPIDER, to model guessing attack evolution in a type-safe way. They make use of restricted character-set strings to ensure that both the password distribution and guessing attack relate to passwords containing the same specific subset of characters. It wouldn't make sense, for example, to attempt to input the password `hunter2` on an ATM, which only supports numeric passwords. This is one of the problems that dependently-typed PAFs address (see below).
 
@@ -145,3 +147,4 @@ GSPIDER is still very much in the proof-of-concept stage. With this in mind, the
 I would like to thank the following people for making this project possible:
 
 * [Daniel Miessler](https://github.com/danielmiessler) and all the contributors and maintainers of [SecLists](https://github.com/danielmiessler/SecLists) which contains password datasets used to create the example distribution files in this repository.
+* [Cliff Harvey](https://github.com/fieldstrength) and all the contributors and maintainers of [the probability library](https://github.com/fieldstrength/probability) which this project makes use of.
