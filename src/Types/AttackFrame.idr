@@ -4,7 +4,6 @@ module Gspider.Types.AttackFrame
 import Data.Vect
 
 import Core
-import Types.Probability
 import Types.RestrictedCharString
 
 
@@ -26,11 +25,11 @@ data AttackFrame : (s : System) -> (n : Nat) -> (m : Nat) -> Type where
   Ongoing : (p : Vect (S n) (RestrictedCharString s)) ->
             (g : Vect (S m) (RestrictedCharString s)) ->
             (d : Distribution s) ->
-            (q : Probability) ->
+            (q : Double) ->
             AttackFrame s (S n) (S m)
   Terminal : (g : Vect (S m) (RestrictedCharString s)) ->
              (d : Distribution s) ->
-             (q : Probability) ->
+             (q : Double) ->
              AttackFrame s Z (S m)
 
 
@@ -42,8 +41,8 @@ data AttackFrame : (s : System) -> (n : Nat) -> (m : Nat) -> Type where
 distinctProb : (p : (RestrictedCharString s)) ->
                (d : Distribution s) ->
                (g : Vect n (RestrictedCharString s)) ->
-               Probability
-distinctProb p d g = if elem p g then imposs else d p
+               Double
+distinctProb p d g = if elem p g then 0 else d p
 
 
 ||| Advances an attack to the next frame.
