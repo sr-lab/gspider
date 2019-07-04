@@ -128,11 +128,11 @@ data AttackFrame : (s : System) -> (n : Nat) -> (m : Nat) -> Type where
   Ongoing : (p : Vect (S n) (RestrictedCharString s)) ->
             (g : Vect (S m) (RestrictedCharString s)) ->
             (d : Distribution s) ->
-            (q : Probability) ->
+            (q : Double) ->
             AttackFrame s (S n) (S m)
   Terminal : (g : Vect (S m) (RestrictedCharString s)) ->
              (d : Distribution s) ->
-             (q : Probability) ->
+             (q : Double) ->
              AttackFrame s Z (S m)
 ```
 
