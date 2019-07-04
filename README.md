@@ -62,37 +62,6 @@ Plotting this data as a line graph makes for some interesting visualisations! Th
 ## Dependent Types
 Dependent types are employed for type-safe reasoning across systems in the GSPIDER model:
 
-### Bounded Double/Probability
-The `BoundedDouble` type represents a `Double` but bounded to lie between a lower and an upper bound. Because operations on `Double` are defined as primitive functions, however, this is non-trivial. The `BoundedDouble` type is defined like this:
-
-```idris
-||| Double-precision floating-point numbers bounded to fall between a lower and an upper bound.
-|||
-||| @a the lower bound
-||| @b the upper bound
-public export
-data BoundedDouble : (a, b : Double) -> Type where
-  ||| Constructs a bounded double with the specified value.
-  |||
-  ||| @x the value of the bounded double
-  MkBoundedDouble : (x : Double) ->
-                    {auto rightSize : So (a <= b)} ->
-                    {auto leftId : So (a <= a)} ->
-                    {auto rightId : So (b <= b)} ->
-                    {auto high : So (a <= x)} ->
-                    {auto low : So (x <= b)} ->
-                    BoundedDouble a b
-```
-
-From here, specifying a `Probability` type is quite straightforward:
-
-```idris
-||| Represents a probability.
-public export
-Probability : Type
-Probability = BoundedDouble 0 1
-```
-
 ### Restricted Character-Set String
 At the core of the probabilistic attack frame type is the restricted character-set string, which is a string type restricted to containing some specific set of characters. It's encoded as below.
 
@@ -126,6 +95,18 @@ data RestrictedCharString : (allowed : List Char) -> Type where
   MkRestrictedCharString : (val : String) ->
                            {auto prf : So (madeOf allowed val)} ->
                            RestrictedCharString allowed
+```
+
+### Distributions
+A distribution is just a function that maps restricted character-set strings to floating-point values. With `RestrictedCharString` defined, we can go ahead and define the `Distribution` dependent type as below.
+
+```idris
+||| Represents a password probability distribution for a system.
+|||
+||| @s the system
+public export
+Distribution : (s : System) -> Type
+Distribution s = (RestrictedCharString s) -> Double
 ```
 
 ### Probabilistic Attack Frames
