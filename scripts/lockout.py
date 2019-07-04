@@ -84,7 +84,20 @@ for raw_prob in raw_probs:
         probs.append(prob)
     except:
         pass
-    
+
+# Lockout policy graphing mode.    
+if '-g' in sys.argv:
+    print('threshold, guesses')
+    threshold = 0
+    guesses = 0
+    for prob in probs:
+        floor = int(prob / risk)
+        if floor != threshold:
+            threshold = floor
+            print(str(threshold * risk) + ', ' + str(guesses))
+        guesses += 1
+    exit(0)
+   
 # Get number of guesses needed to exceed risk (-1).
 guesses = -1
 for prob in probs:
