@@ -12,7 +12,7 @@ def print_usage(show_help_line=False):
     Args:
         show_help_line (bool): If true, information on help flag `-h` will be printed.
     """
-    print('Usage: python lockout.py [-h] <sysfile> <distfile> <attfile> <acceptable_risk>')
+    print('Usage: python lockout.py [-hg] <sysfile> <distfile> <attfile> <acceptable_risk>')
     print('Computes the minimum number of guesses permitted to keep probability of breach below acceptable threshold.')
     if show_help_line:
         print('For extended help use \'-h\' option.')
@@ -26,8 +26,10 @@ def print_help():
     print('\tsysfile: The system file that specifies supported password characters on the system. (see ../systems)')
     print('\tdistfile: A file that specifies a password frequency distribution. (see ../dists)')
     print('\tattfile: A file that specifies a password guessing attack. (see ../attacks)')
+    print('\tacceptable_risk: The threshold of acceptable risk as a number between 0 and 1.')
     print('Options:')
     print('\t-h: Show this help screen')
+    print('\t-g: Graphing mode, acceptable_risk then becomes the increment at which to plot points')
     
     
 # Print help if asked.
