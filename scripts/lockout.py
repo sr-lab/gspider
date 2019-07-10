@@ -108,4 +108,4 @@ for prob in probs:
         break
         
 # Show friendly output.
-print('A total of', guesses, 'guesses can be made by this attack in order for guess success probability to exceed', str(risk) + '.')
+print('A maximum of', guesses, 'guesses can be made by this attack in order for guess success probability to remain below', str(risk) + '.')
