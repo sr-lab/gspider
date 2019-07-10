@@ -138,6 +138,19 @@ data AttackFrame : (s : System) -> (n : Nat) -> (m : Nat) -> Type where
              AttackFrame s Z (S m)
 ```
 
+## Computing Lockout Policies
+This utility comes with a file `/scripts/lockout.py` which allows you to compute a _lockout policy_ for a system based on the output yielded by GSPIDER. A lockout policy is just the minimum number of guesses we can allow a user to make while keeping the probability of a guessing attack being successful against a randomly-chosen account on our system below a certain acceptable threshold. Try it out like this (must be from the `/scripts` directory):
+
+```bash
+python lockout.py ../systems/ascii.sys ../dists/elitehacker.freqs ../attacks/top10k.att 0.05
+```
+
+You'll get some nice friendly output that looks like this:
+
+```
+A maximum of 14 guesses can be made by this attack in order for guess success probability to remain below 0.05.
+```
+
 ## Limitations
 GSPIDER is still very much in the proof-of-concept stage. With this in mind, there are a few limitations:
 
