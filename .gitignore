@@ -1,3 +1,7 @@
+# Build output
 *.ibc
 *.o
+
+# Built binaries
 *.exe
+gspider

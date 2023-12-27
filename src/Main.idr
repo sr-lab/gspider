@@ -5,12 +5,11 @@ import Data.Vect
 import Data.SortedMap
 
 import Core
+import Probabilistic
 import File.FrequencyFileParsing
 import File.SystemLoading
 import Types.AttackFrame
 import Types.RestrictedCharString
-
-import Probability.Core
 
 
 ||| Looks up a password probability in a sorted map.
@@ -43,7 +42,7 @@ toDist s [] = flat []
 toDist s freqs =
   let (ps, fs) = splitFreqRecords freqs in
   shape (convertToRestricted s ps) (map cast fs)
-
+  
 
 ||| Loads a password probability distribution.
 |||
@@ -109,6 +108,6 @@ main = do
   [_, arg_sys, arg_dist, arg_att] <- getArgs -- TODO: Bind alternatives!
   Just s <- loadSystem arg_sys | Nothing => putStrLn "Error: Could not load system."
   Just dist <- loadDist s arg_dist | Nothing => putStrLn "Error: Could not load distribution."
-  Just att <- loadAtt s arg_att | Nothing => putStrLn "Error: Could not load attack."
+  Just att <- (if arg_att == "ideal" then loadAtt s arg_att else loadAtt s arg_att) | Nothing => putStrLn "Error: Could not load attack."
   let frame = initFrame (fromList att) dist -- Initialise probabilistic attack frame.
   runFrame frame -- Run PAF to completion.
