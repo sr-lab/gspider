@@ -4,7 +4,7 @@ import subprocess
 
 
 # Specify relative location of GSPIDER executable.
-GSPIDER_LOC = '../src/gspider.exe'
+GSPIDER_LOC = '../src/gspider'
 
 
 def print_usage(show_help_line=False):
