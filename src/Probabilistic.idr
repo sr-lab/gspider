@@ -1,3 +1,7 @@
+||| This file consists of utility types and functions for programming with probabilities.
+||| Adapted by Saul Johnosn (@lambdacasserole) for Idris v1.3.4 from: https://github.com/fieldstrength/probability
+||| Date: 30/12/2023
+
 module Gspider.Probabilistic
 
 
